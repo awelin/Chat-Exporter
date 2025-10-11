@@ -1,8 +1,13 @@
 chrome.runtime.onMessage.addListener((msg) => {
   if (msg.action === "exportChat") {
     const chatData = extractChat();
-    const html = buildHTML(chatData);
-    downloadHTML(html, chatData.title);
+    if (msg.type === "html") {
+      const html = buildHTML(chatData);
+      downloadFile(html, chatData.title + ".html", 'text/html');
+    } else if (msg.type === "markdown") {
+      const markdown = buildMarkdown(chatData);
+      downloadFile(markdown, chatData.title + ".md", 'text/markdown');
+    }
   }
 });
 
@@ -15,8 +20,8 @@ function extractChat() {
   return { title, content, url, timestamp };
 }
 
-function downloadHTML(html, title) {
-  const blob = new Blob([html], { type: 'text/html' });
+function downloadFile(content, filename, mimetype) {
+  const blob = new Blob([content], { type: mimetype });
   const url = URL.createObjectURL(blob);
-  chrome.runtime.sendMessage({ action: "saveFile", url, filename: `${title}.html` });
+  chrome.runtime.sendMessage({ action: "saveFile", url, filename });
 }

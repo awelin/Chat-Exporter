@@ -19,6 +19,12 @@
       "suggested_key": {
         "default": "Ctrl+M"
       },
+      "description": "Export current ChatGPT chat as Markdown"
+    },
+    "export-chat-html": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+H"
+      },
       "description": "Export current ChatGPT chat as HTML"
     }
   },

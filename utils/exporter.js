@@ -30,3 +30,10 @@ function buildHTML({ title, content, url, timestamp }) {
   </body>
   </html>`;
 }
+
+function buildMarkdown({ title, content, url, timestamp }) {
+  const formattedTimestamp = new Date(timestamp).toLocaleString();
+  // Simple Markdown: strip HTML tags and format as plain text
+  const textContent = content.replace(/<\/?[^>]+(>|$)/g, "").trim();
+  return `# ${title}\n\n**Exported from:** [${url}](${url})\n**Timestamp:** ${formattedTimestamp}\n\n${textContent}`;
+}
