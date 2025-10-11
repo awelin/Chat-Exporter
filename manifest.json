@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Chat Exporter",
+  "description": "Export ChatGPT conversations as HTML files.",
+  "version": "1.0.0",
+  "permissions": ["downloads", "activeTab", "scripting"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://chatgpt.com/*"],
+      "js": ["utils/exporter.js", "content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "commands": {
+    "export-chat": {
+      "suggested_key": {
+        "default": "Ctrl+M"
+      },
+      "description": "Export current ChatGPT chat as HTML"
+    }
+  },
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
