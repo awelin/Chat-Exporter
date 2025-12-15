@@ -1,21 +1,36 @@
-chrome.commands.onCommand.addListener((command) => {
-  if (command === "export-chat") {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      chrome.tabs.sendMessage(tabs[0].id, { action: "exportChat", type: "markdown" });
-    });
-  } else if (command === "export-chat-html") {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      chrome.tabs.sendMessage(tabs[0].id, { action: "exportChat", type: "html" });
-    });
-  }
+chrome.runtime.onInstalled.addListener(() => {
+  console.log('Chat Printer Extension Installed/Updated');
 });
 
-chrome.runtime.onMessage.addListener((msg) => {
-  if (msg.action === "saveFile") {
-    chrome.downloads.download({
-      url: msg.url,
-      filename: msg.filename,
-      saveAs: false
+chrome.commands.onCommand.addListener((command) => {
+  console.log('Command received:', command);
+
+  let action = "";
+  if (command === "export-markdown") {
+    action = "exportMarkdown";
+  } else if (command === "export-html") {
+    action = "exportHTML";
+  }
+
+  if (action) {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs && tabs.length > 0) {
+        const tab = tabs[0];
+        console.log(`Found active tab: ID=${tab.id}, URL=${tab.url}, Status=${tab.status}`);
+
+        console.log(`Sending ${action} message to tab:`, tab.id);
+        chrome.tabs.sendMessage(tab.id, { action: action })
+          .then(() => console.log('Message sent successfully'))
+          .catch((err) => {
+            console.error('Error sending message:', err);
+            // Common error: "Could not establish connection" -> Script not injected
+            if (err.message.includes("Could not establish connection")) {
+              console.error("The content script is not running. The user needs to refresh the page.");
+            }
+          });
+      } else {
+        console.warn('No active tab found. Make sure the ChatGPT tab is focused.');
+      }
     });
   }
 });

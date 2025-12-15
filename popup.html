@@ -1,7 +1,33 @@
 <!DOCTYPE html>
 <html>
-  <body>
-    <button id="export">Export Chat</button>
-    <script src="popup.js"></script>
-  </body>
+
+<body style="min-width: 200px; padding: 15px; display: flex; flex-direction: column; gap: 10px;">
+  <button id="export-md" style="
+      background: #17a2b8; 
+      color: white; 
+      border: none; 
+      padding: 10px 20px; 
+      border-radius: 5px; 
+      cursor: pointer; 
+      font-size: 14px; 
+      width: 100%;
+    ">📝 Export Markdown (Ctrl+M)</button>
+
+  <button id="export-html" style="
+      background: #28a745; 
+      color: white; 
+      border: none; 
+      padding: 10px 20px; 
+      border-radius: 5px; 
+      cursor: pointer; 
+      font-size: 14px; 
+      width: 100%;
+    ">📄 Export HTML (Ctrl+Shift+H)</button>
+
+  <div style="margin-top: 5px; font-size: 12px; color: #666; text-align: center;">
+    Open a chat to export
+  </div>
+  <script src="popup.js"></script>
+</body>
+
 </html>
