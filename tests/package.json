@@ -1,0 +1,46 @@
+{
+  "name": "chat-printer-tests",
+  "version": "1.0.0",
+  "description": "Test suite for Chat Printer Chrome Extension",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:unit": "jest tests/unit",
+    "test:integration": "jest tests/integration",
+    "test:e2e": "jest tests/e2e",
+    "test:coverage": "jest --coverage",
+    "test:ci": "jest --ci --coverage --watchAll=false"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": ["<rootDir>/setup.js"],
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ],
+    "collectCoverageFrom": [
+      "../content.js",
+      "../background.js",
+      "../popup.js",
+      "!tests/**"
+    ],
+    "coverageDirectory": "coverage",
+    "coverageReporters": ["text", "lcov", "html"],
+    "testTimeout": 10000
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "playwright": "^1.40.0",
+    "@playwright/test": "^1.40.0"
+  },
+  "keywords": [
+    "chrome-extension",
+    "chatgpt",
+    "printing",
+    "testing",
+    "jest",
+    "playwright"
+  ],
+  "author": "Chat Printer Extension",
+  "license": "MIT"
+}
