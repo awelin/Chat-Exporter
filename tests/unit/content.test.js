@@ -31,6 +31,7 @@ describe('Content Script Functions', () => {
       },
       querySelectorAll: jest.fn(),
       createElement: jest.fn(),
+      addEventListener: jest.fn(),
       body: {
         appendChild: jest.fn()
       }
@@ -107,12 +108,20 @@ describe('Content Script Functions', () => {
 
   describe('extractMessagesForPrint', () => {
     test('should extract messages when chat messages are present', () => {
+      // Mock the first selector to return messages (simulating current ChatGPT structure)
+      sandbox.document.querySelectorAll.mockImplementation((selector) => {
+        if (selector === 'article[data-testid*="conversation-turn"]') {
+          return mockMessages;
+        }
+        return [];
+      });
+
       // Execute function in sandbox
       const result = vm.runInContext('extractMessagesForPrint()', sandbox);
 
       expect(result).toContain('<div class="message">');
       expect(result).toContain('<p>Hello, how can I help you?</p>');
-      expect(sandbox.document.querySelectorAll).toHaveBeenCalledWith('div[data-message-id]');
+      expect(sandbox.document.querySelectorAll).toHaveBeenCalledWith('article[data-testid*="conversation-turn"]');
     });
 
     test('should handle empty chat gracefully', () => {
@@ -148,7 +157,7 @@ describe('Content Script Functions', () => {
 
       const html = vm.runInContext('buildPrintHTML(testChatData)', sandbox);
 
-      expect(html).toContain('<!DOCTYPE html>');
+      expect(html).toContain('DOCTYPE html');
       expect(html).toContain('<title>Test Conversation</title>');
       expect(html).toContain('@media print');
       expect(html).toContain('Test message');

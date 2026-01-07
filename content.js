@@ -167,10 +167,27 @@ function printChat() {
 }
 
 function extractMessagesForPrint() {
-    const messages = [...document.querySelectorAll('div[data-message-id]')];
+    // Try multiple selectors for ChatGPT message containers (in order of preference)
+    const selectors = [
+        'article[data-testid*="conversation-turn"]',  // Current ChatGPT structure
+        'div[data-message-id]',                      // Legacy selector
+        'div[data-testid*="message"]',               // Alternative message selector
+        'div.group',                                 // Fallback class-based selector
+        '[data-message-author-role]'                  // Another common pattern
+    ];
+
+    let messages = [];
+    for (const selector of selectors) {
+        messages = [...document.querySelectorAll(selector)];
+        if (messages.length > 0) {
+            console.log(`Found ${messages.length} messages using selector: ${selector}`);
+            break;
+        }
+    }
 
     if (messages.length === 0) {
-        console.warn('No chat messages found. Make sure you are on a ChatGPT conversation page.');
+        console.warn('No chat messages found. Make sure you are on a ChatGPT conversation page with messages.');
+        console.log('Available selectors tried:', selectors);
         return '';
     }
 
@@ -189,7 +206,7 @@ function extractMessagesForPrint() {
         // Clean up the message styling
         cloned.style.cssText = 'margin-bottom: 1em; padding: 1em; border-left: 3px solid #ddd;';
 
-        return `< div class="message" > ${cloned.innerHTML}</div > `;
+        return `<div class="message">${cloned.innerHTML}</div>`;
     }).join('');
 }
 
